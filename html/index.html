@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  background-color: #2196F3;
+  padding: 5px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 5px 0;
+  font-size: 30px;
+  width : 100px
+}
+
+.item {
+  padding: 5px 0;
+}
+</style>
+    <meta charset="utf-8"/>
+
+    
+  <script type="application/javascript">
+  </script>
+ </head>
+ <body">
+
+
+<h1>Le Jeu des 3 Couleurs</h1>
+
+<button id="red" style="background-color:red" onclick="click()" >Rouge </button>
+<button id="green" style="background-color:green">Vert </button>
+<button id="blue" style="background-color:blue">Bleu</button>
+
+<div id="mondiv" class="grid-container">
+ 
+</div>
+    <script src="numjs.js"></script>
+    <script>
+      nj.config.printThreshold = 9;
+    function eko(x) {
+       console.log(x);
+    }
+
+    var cols = new Set([1,2,3]);
+    var a = nj.array([2,3,4]);
+    var S = 4;
+      var L = nj.arange(S); //[...Array(S).keys()];
+    console.log(L.tolist());
+    var b = nj.zeros([S+2, S+2], 'int32');
+    var v4 = nj.zeros([3, 3], 'int32');
+    v4.set(1,1,1);
+
+
+    console.log(b);
+    console.log(b.shape);
+    console.log(b.sum());
+
+    function blank(c) {
+      x = b;
+      x.slice([1,-1],[1,-1]).assign(c, false);
+      return x;
+    }
+
+
+    Set.prototype.difference = function(otherSet)
+    {
+      // creating new set to store difference
+      var differenceSet = new Set();
+      
+      // iterate over the values
+      for(var elem of this)
+      {
+      if(!otherSet.has(elem))
+         differenceSet.add(elem);
+      }
+      return differenceSet;
+    }
+
+    function possible(area) {
+      console.log(area.tolist());      
+      console.log(v4.tolist());      
+      e = area.multiply(v4).flatten();
+      dd = cols.difference(new Set(e.tolist()));
+      console.log(dd);
+      return dd;
+    }
+    possible(b.slice([1,4], [1,4]));
+
+    function next(game) {
+      n = []
+      for (i_ of L) {
+         for (j_ of L) {
+           i,j = i_ + 1, j_+1
+           if (game.get(i,j) == 0) {
+               l = possible(game.slice([i-1,i+2, j-1,j+2]));
+               console.log(l);  
+  //             n = n + [ play(m, i, j, x) for m in l]
+   
+           }
+         }
+      }
+      return n
+      }
+
+
+    b1 = blank(1);
+    eko(b1.tolist());
+
+    color = null;
+
+    function statut() {
+      console.log("fetching");
+    }
+    function click() {
+      console.log("click");
+    }
+    const myTimeout = setTimeout(statut, 1000);  
+    l = [ "red", "green", "blue" ];
+    for (c of l) { 
+      console.log(c); 
+      btn = document.getElementById(c);
+      btn.addEventListener('click', function(ev) {
+        color = ev.target.id;
+      });
+    }
+
+    const mondiv = document.getElementById("mondiv");
+    console.log(mondiv);
+    buttons = [];
+    clicked = [];
+    function addbutton(txt) {
+      const nbutton = document.createElement("button");
+      nbutton.innerText = txt;
+      nbutton.style = "padding:5px";
+      nbutton.addEventListener('click', function() {
+        console.log( this );
+        sty = "background-color:" + color;
+        console.log(sty);
+        this.style = sty;
+      });
+      buttons.push(nbutton);
+      mondiv.appendChild(nbutton);
+    };
+    //console.log("create buttons");
+    for (i = 0; i < 16; i++) {
+                    addbutton("   \n       ");
+                    }                        
+    </script>
+ </body>
+</html>
